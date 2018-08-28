@@ -1,0 +1,53 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width,minimum-scale=1.0,maximum-scale=1.0,user-scalable=no" />
+    <title>Little Panda</title>
+    <style>
+    div.ig {
+        border-bottom: 1px solid #5C0D11;
+        padding: 10px 0;
+
+    }
+    </style>
+
+</head>
+<body>
+    <a href="/">Welcome To Little Panda!></a>
+    <button type="button" onclick="location.href='/manage'">Manage Galleries</button>
+    <button type="button" onclick="location.href='/random'">Random Galleries</button>
+    <div>
+    <form  action="/search" method="post" id="search">
+            <input type="search" name="keyword"  />
+    </form>
+    <button type="submit" form="search" value="Submit">Search</button><br/>
+    </div>
+    <div style="clear:both">
+        {% for book in books %}
+
+            <div class="ig">
+             <div style="float:top">
+                {{ book['title'] }}
+             </div>
+            <a href="/gallery/{{ book['book_id'] }}">
+                <img src="{{'img/'+ book['path'] }}" , width="150"/>
+            </a>
+            </div>
+
+
+        {% endfor %}
+    </div>
+    <br/>
+
+
+    <div style="clear:both">
+        {% if nowPage == 1 %}
+        <a href="/?page=2">Next Page</a><p>  </p>
+        {% else %}
+        <a href="/?page={{ nowPage - 1 }}">Previous Page</a><a href="/?page={{ nowPage + 1 }}">Next page</a>
+        {% endif %}
+    </div>
+</body>
+</html>
+

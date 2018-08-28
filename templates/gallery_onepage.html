@@ -1,0 +1,102 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width,minimum-scale=1.0,maximum-scale=1.0,user-scalable=no" />
+    <title>{{ title }}</title>
+    <style>
+        div.gt {
+            float: left;
+            font-weight: bold;
+            padding: 1px 4px;
+            margin: 0 2px 5px 2px;
+            white-space: nowrap;
+            position: relative;
+            border-radius: 5px;
+            border: 1px solid #806769;
+            background: #F2EFDF
+        }
+    </style>
+    <script src="/static/lazyload.js"></script>
+    <script type="text/javascript" charset="utf-8">
+        window.addEventListener("load", function(event) {
+            console.log("LOAD!");
+            lazyload();
+        });
+
+        function sliderMouseUp() {
+            var ranger = document.getElementById('ranger');
+            var ranger_text = document.getElementById('slider_page_id');
+            var page = ranger.value;
+            ranger_text.style.display = 'block';
+
+            location.href = "#page_" + page;
+            ranger_text.style.display = 'none';
+        }
+
+        function sliderChange() {
+            var ranger = document.getElementById('ranger');
+            var ranger_text = document.getElementById('slider_page_id');
+            var page = ranger.value;
+            ranger_text.style.display = 'block';
+            ranger_text.innerHTML = page;
+
+
+
+        }
+    </script>
+</head>
+
+<body>
+    <form style="display: none;" action="/delete" method="post" id="delete_gallery">
+        <input type="text" name="type" value="gallery" /><br />
+        <input type="text" name="target" value="{{ books[0]['book_id'] }}" /><br />
+    </form>
+    <button type="submit" form="delete_gallery" value="Submit">Delete Gallery</button><br/>
+    <p>Book size: {{ book_size }} mb</p>
+    {# 标签部分
+
+    <div class="gt">
+        <table>
+            <tbody>
+                {% for catalog,tags in tagGroup.items() %}
+                <tr>
+                    <td> {{ catalog }}</td>
+                    <td>
+                        {% for tag in tags %}
+                        <div class="gt">
+                            <a href="/"> {{ tag }}</a>
+                        </div>
+                        {% endfor %}
+                    </td>
+                </tr>
+                {% endfor %}
+            </tbody>
+        </table>
+    </div>
+
+    #} {# 图片部分 #}
+    <div style="width: 100%;position: fixed; bottom: 0px;left: 0px;">
+        <div align="center" style="width:100%;">
+            <p style="display: none;font-size: x-large;background-color: #F2EFDF;width: auto;" id="slider_page_id"></p>
+        </div>
+        <input id="ranger" style="width: 100%;" type="range" name="range" min="1" max="{{ books|length }}" step="1" value="1" onchange="sliderMouseUp()" oninput="sliderChange()" />
+    </div>
+
+    {% for book in books %}
+    <a href="/"> 首页 </a>
+    <span>Page:{{ book['page'] }} All {{ books|length }} pages</span><a href="/"> 首页 </a>
+    <div id="page_{{ book['page'] }}">
+        <img class="lazyload" data-src="{{'/img/'+ book['path'] }}" style="max-width: 100%;" />
+
+    </div>
+
+    {% endfor %}
+
+
+
+
+</body>
+
+</html>

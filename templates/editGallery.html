@@ -1,0 +1,66 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>Edit Gallery : {{ pages[0]['title'] }}</title>
+    <script>
+        function sortNumber(a,b)
+        {
+            return a - b;
+        }
+        function SubmitNewPageOrder() {
+
+            var inputs = document.getElementsByTagName('input');
+            inputs = Array.from(inputs);
+            var index = 0;
+            var newPagesOrder = new Array;
+            for ( index in inputs) {
+                newPagesOrder.push(parseInt(inputs[index].value));
+            }
+
+            var nnpage = Array.from(newPagesOrder);
+            nnpage.sort(sortNumber);
+            for ( index in nnpage){
+                if ( nnpage[index] != (parseInt(index)+1)){
+                    alert("The Page Order Number You Has Set Is Error!")
+                    return;
+                }
+            }
+
+        var xhr = new XMLHttpRequest();
+        var url = "/editGallery";
+        xhr.open("POST", url, true);
+        xhr.setRequestHeader("Content-type", "application/json");
+        xhr.onreadystatechange = function () {
+            if (xhr.readyState === 4 && xhr.status === 200) {
+
+            }
+        };
+        var postData = {'pageOrder':newPagesOrder,'book_id':{{ pages[0]['book_id']}} }
+
+        var data = JSON.stringify(postData);
+            xhr.send(data);
+
+        }
+
+    </script>
+</head>
+<body>
+<div>
+<button type="button" onclick="SubmitNewPageOrder()">Submit New Page Order</button></div>
+{% for page in pages %}
+    {% if page['image_type'] == 'content_thumb' %}
+        <div style="float: left;margin: 5px">
+            <div>
+            <input name="page_select" type="text" value="{{ page['page'] }}" ></div>
+            <div>page:{{ page['page'] }}</div>
+            <img src="{{'/img/'+ page['path'] }}">
+        </div>
+    {% endif %}
+
+{% endfor %}
+
+
+
+</body>
+</html>

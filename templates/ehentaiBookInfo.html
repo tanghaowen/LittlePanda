@@ -1,0 +1,74 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>{{ title }}</title>
+    <style>
+        div.gt {
+            float: left;
+            font-weight: bold;
+            padding: 1px 4px;
+            margin: 0 2px 5px 2px;
+            white-space: nowrap;
+            position: relative;
+            border-radius: 5px;
+            border: 1px solid #806769;
+            background: #F2EFDF
+        }
+    </style>
+    <script src="/static/postRequest.js">
+
+    </script>
+</head>
+<body onload="document.getElementById('useinfo').focus();">
+    {{ title }}
+    <div>{{ book_catalog }}</div>
+
+    <div class="gt">
+        <table>
+            <tbody>
+                {% for catalog,tags in tagGroup.items() %}
+                <tr>
+                    <td> {{ catalog }}</td>
+                    <td>
+                        {% for tag in tags %}
+                        <div class="gt">
+                            {{ tag }}
+                        </div>
+                        {% endfor %}
+                    </td>
+                </tr>
+                {% endfor %}
+            </tbody>
+        </table>
+    </div>
+
+
+
+    <br/>
+    <div>
+
+        <form style="display: none;" method="post" id="select_book" name="select_book">
+            <input id="input_book" type="text"  name="url" value="" />
+            <input id="input_book" type="text" name="type" value="settags" />
+            <input id="input_book" type="text" name="book_id" value="{{ book_id }}" /><br />
+            <br />
+        </form>
+    </div>
+        <button type="button" id="useinfo" form="select_book" autofocus="autofocus" onclick='new function() {
+
+
+        postJsonWithFunction("/searcheh", {"type": "settags", "book_id":{{book_id}}, "url":"{{ book_url }}"  }, function() {
+                        window.parent.reloadGallery();
+
+                });
+        }'>Use this info!</button>
+
+<script>
+
+
+</script>
+</body>
+
+
+</html>

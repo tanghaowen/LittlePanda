@@ -1,0 +1,412 @@
+<!DOCTYPE html>
+<html lang="en" style="height: 100%;">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width,minimum-scale=1.0,maximum-scale=1.0,user-scalable=no" />
+    <title>{{ title }}</title>
+    <style>
+        div.gt {
+            float: left;
+            font-weight: bold;
+            padding: 1px 4px;
+            margin: 0 2px 5px 2px;
+            white-space: nowrap;
+            position: relative;
+            border-radius: 5px;
+            border: 1px solid #806769;
+            background: #F2EFDF
+        }
+        div.gt2 {
+
+            font-weight: bold;
+            padding: 1px 4px;
+            margin: 0 2px 5px 2px;
+            white-space: nowrap;
+            position: relative;
+            border-radius: 5px;
+            border: 1px solid #806769;
+            background: #F2EFDF
+        }
+    </style>
+    <style>
+        html, body {
+            position: relative;
+            height: 100%;
+        }
+
+        .swiper-container {
+            width: 100%;
+            height: 100%;
+        }
+
+    </style>
+    <script src="../static/postRequest.js"></script>
+    <script type="text/javascript" charset="utf-8">
+        window.addEventListener("load", function(event) {
+        initPage();
+        mySwiper = new Swiper ('.swiper-container', {
+        direction: 'horizontal',
+            zoom : true,
+        loop: false,
+        onSlideChangeEnd: function(swiper){
+            imageSlideChange(swiper.activeIndex);
+            document.getElementById("ranger").value = swiper.activeIndex;
+
+        },
+        onClick:function (swiper,e) {
+        swiper.slideNext();
+        location.href = "#contant";
+
+      }
+
+  })
+        });
+
+        function sliderMouseUp() {
+
+            var ranger = document.getElementById('ranger');
+            var ranger_text = document.getElementById('slider_page_id');
+            var page = ranger.value;
+            ranger_text.style.display = 'block';
+
+            ranger_text.style.display = 'none';
+            slideGotoPage(parseInt(page));
+        }
+
+        function gotoPage(page) {
+            div_tag = document.getElementById("content_image_div");
+            var next_page = page;
+
+            while (div_tag.firstChild) div_tag.removeChild(div_tag.firstChild);
+            var next_page_image_url = "/img/" + content_images[next_page-1];
+            console.log("go to page image url: " + next_page_image_url);
+            img_tags[next_page-1].src = next_page_image_url ;
+            div_tag.appendChild(img_tags[next_page-1]);
+
+            document.getElementById("page_index").innerText = next_page.toString();
+
+            img_tags[next_page-1+1].src = "/img/" + content_images[next_page-1+1];
+            img_tags[next_page-1+2].src = "/img/" + content_images[next_page-1+2];
+            img_tags[next_page-1+3].src = "/img/" + content_images[next_page-1+3];
+
+        }
+        function slideGotoPage(page) {
+            div_tag = document.getElementById("content_image_div");
+            var next_page = page;
+
+            var next_page_image_url = "/img/" + content_images[next_page-1];
+            console.log("go to page image url: " + next_page_image_url);
+            img_tags[next_page-1].src = next_page_image_url ;
+            mySwiper.slideTo(next_page-1);
+
+            document.getElementById("page_index").innerText = next_page.toString();
+
+            img_tags[next_page-1+1].src = "/img/" + content_images[next_page-1+1];
+            img_tags[next_page-1+2].src = "/img/" + content_images[next_page-1+2];
+            img_tags[next_page-1+3].src = "/img/" + content_images[next_page-1+3];
+
+        }
+        function gotoNextpage() {
+
+
+            div_tag = document.getElementById("content_image_div");
+            var img_tag = div_tag.getElementsByTagName("img")[0];
+            var page = img_tag.getAttribute("page");
+            console.log("now page:" + page);
+            page = parseInt( page );
+            if ( page >= content_images.length ) {
+                console.log("Arrive the last page,stop");
+                return;
+            }
+
+            var next_page = ++page;
+            console.log("next page:" + next_page.toString());
+
+
+            while (div_tag.firstChild) div_tag.removeChild(div_tag.firstChild);
+
+            var next_page_image_url = "/img/" + content_images[next_page-1];
+            console.log("next page image url: " + next_page_image_url);
+            img_tags[next_page-1].src = next_page_image_url ;
+            div_tag.appendChild(img_tags[next_page-1]);
+            document.getElementById("ranger").value = next_page;
+            location.href = "#content_image_div";
+            document.getElementById("page_index").innerText = next_page.toString();
+
+            img_tags[next_page-1+1].src = "/img/" + content_images[next_page-1+1];
+            img_tags[next_page-1+2].src = "/img/" + content_images[next_page-1+2];
+            img_tags[next_page-1+3].src = "/img/" + content_images[next_page-1+3];
+
+
+
+        }
+        function sliderChange() {
+            var ranger = document.getElementById('ranger');
+            var ranger_text = document.getElementById('slider_page_id');
+            var page = ranger.value;
+            ranger_text.style.display = 'block';
+            ranger_text.innerHTML = page;
+        }
+
+
+        function initPage() {
+            var page = 1;
+            var content_div = document.getElementById("content_image_div");
+            console.log("start to init img tags!");
+            console.log("length of content_images:"+content_images.length);
+            for ( var i = 0;i<content_images.length;i++){
+
+                var img_tag = new Image();
+                var img_div = document.createElement('div');
+                var img_div_swiper_zoom = document.createElement('div');
+
+                img_div.appendChild( img_div_swiper_zoom)
+                img_div_swiper_zoom.appendChild( img_tag )
+                img_tags.push(img_tag);
+
+                img_div.classList.add("swiper-slide");
+                img_div_swiper_zoom.classList.add("swiper-zoom-container");
+                /*img_div.style["width"] = "100%";
+                img_tag.style["width"] = "100%";*/
+
+                img_tag.setAttribute("page", page.toString());
+                page++;
+                img_slides.push(img_div);
+                content_div.appendChild(img_div);
+            }
+            console.log("tags:"+img_tags.length);
+
+
+            if ( content_images.length > 3) {
+                img_tags[0].src = "/img/" + content_images[0];
+                img_tags[1].src = "/img/" + content_images[1];
+                img_tags[2].src = "/img/" + content_images[2];
+            }else if ( content_images.length == 1) {
+                img_tags[0].src = "/img/" + content_images[0];
+            }
+
+
+
+        }
+        var content_images = {{ content_images| safe }};
+        var img_tags = new Array();
+        var img_slides = new Array();
+        var mySwiper = null;
+        function imageSlideChange( index ) {
+            var now_page_index = index;
+            var next_page_index = index + 1;
+            console.log("SlideChange " + index);
+            location.href = "#contant";
+            img_tags[next_page_index-1].src = "/img/" + content_images[next_page_index-1];
+            img_tags[next_page_index].src = "/img/" + content_images[next_page_index];
+            img_tags[next_page_index+1].src = "/img/" + content_images[next_page_index+1];
+            img_tags[next_page_index+2].src = "/img/" + content_images[next_page_index+2];
+
+        }
+        
+        
+        function GotoEditGalleryPage() {
+            var url = "/editGallery?id={{ gallery_id }}";
+            location.href = url;
+        }
+    </script>
+    <script src="/static/swiper-3.4.2.min.js"></script>
+    <script>
+        function setThisPageToCover() {
+            var page = mySwiper.activeIndex+1;
+            var book_id = {{ books[0]['book_id'] }};
+            location.href = "/editGalleryCover?book_id=" + book_id + "&page=" + page;
+            console.log(page);
+
+
+        }
+
+                function changeTitle() {
+            var title = document.getElementById("titleInput").value;
+            postJson("/editTitle", {"book_id":{{gallery_id}}, "title": title});
+
+
+
+        }
+        
+    </script>
+    <script>
+        function addTags() {
+            var input = document.getElementById("addTagInput");
+            var tagsContentString = input.value;
+
+            var tmpTags = tagsContentString.split(",");
+            var tags = {};
+            for (var index in tmpTags) {
+                var catalog = tmpTags[index].split(":")[0];
+                var tag_name = tmpTags[index].split(":")[1];
+                console.log(catalog);
+                console.log(tag_name);
+                if (tags[catalog] == null){
+                    tags[catalog] = new Array();
+                    tags[catalog].push(tag_name)
+
+                }else{
+                    tags[catalog].push(tag_name)
+                }
+
+
+            }
+            var postData = {"command": "add", "book_id":{{gallery_id}}, "data": tags};
+            postJson("/edittag",postData );
+
+        }
+
+    </script>
+    <script>
+        function deleteTag(catalog,tag_name) {
+            console.log(catalog);
+            postJsonWithFunction("/edittag", {
+                "command": "delete",
+                "book_id": {{ gallery_id }},
+                "data": {"catalog": catalog, "name": tag_name}
+            },deleteSucc);
+        }
+
+        function deleteSucc() {
+
+
+        }
+
+
+    </script>
+    <script>
+        function reloadGallery() {
+            console.log("Reload page");
+            location.href = "/gallery/{{ gallery_id }}";
+
+
+        }
+
+    </script>
+
+
+</head>
+
+<body style="height:100%;">
+
+    <div>
+    <button type="submit" form="delete_gallery" value="Submit" style="background-color: red">Delete Gallery</button>
+    <button type="submit" form="delete_gallery_direct" value="Submit" style="background-color: green">Delete Gallery(Direct)</button>
+    <span>  Book size: {{ book_size }} mb</span></div>
+    <br/>
+    <button type="button" onclick="GotoEditGalleryPage()" >Edit Gallery Order</button>
+    <button type="button" onclick="setThisPageToCover()" >Set This Page As Cover</button>
+    <a href="/">HomePage</a>
+    </div>
+    <link rel="stylesheet" href="/static/swiper-3.4.2.min.css">
+    {# 顶部的标题，删除，搜索 按钮 #}
+    <form style="display: none;" action="/delete" method="post" id="delete_gallery">
+        <input type="text" name="type" value="gallery" /><br />
+        <input type="text"  name="target" value="{{ books[0]['book_id'] }}" />
+        <input  type="text" name="page" value="{{ gallery_id }}" >
+        <br />
+    </form>
+
+        <form style="display: none;" action="/delete" method="post" id="delete_gallery_direct">
+        <input type="text" name="type" value="gallery_direct" /><br />
+        <input type="text"  name="target" value="{{ books[0]['book_id'] }}" />
+        <input  type="text" name="page" value="{{ gallery_id }}" >
+        <br />
+    </form>
+    <p> {{ title }}</p>
+
+    <div>
+
+        <form  action="/searcheh" method="get" id="searchInEh">
+        <input type="text" id="search_eh_input" name="keyword" value="{{ search_title }}" style="width: 80%" />
+        <input type="text" name="bookid" value="{{ gallery_id }}"  style="display: none;" />
+        <button type="submit" id="search_in_eh_button" form="searchInEh" value="Submit" onclick="searchInEh()"> Search In Eh </button>
+        </form>
+
+        <div>
+            <input type="text" id="addTagInput"/>
+            <button type="button" onclick="addTags()"> Add Tags </button>
+			          <input type="text" id="titleInput" value="{{ title }}" />
+            <button type="button" onclick="changeTitle()"> Change Title </button>
+        </div>
+    </div>
+    {# tag标签 #}
+    <div class="gt2" >
+        <table>
+            <tbody>
+                {% for catalog,tags in tagGroup.items() %}
+                <tr>
+                    <td> {{ catalog }}</td>
+                    <td>
+                        {% for tag in tags %}
+                        <div class="gt">
+                            <a href="/search?tag={{ tag }}"> {{ tag }}</a>   <a href="javascript:deleteTag('{{ catalog }}','{{ tag }}')">×</a>
+                        </div>
+                        {% endfor %}
+                    </td>
+                </tr>
+                {% endfor %}
+            </tbody>
+        </table>
+    </div>
+
+    <div id="content_div" style="width: 100%;height: 100%;">
+    {# 按下滚动条时出现的页数 和 滚动条 #}
+    <div style="width: 100%;position: fixed; bottom: 0px;left: 0px;z-index: 100;">
+        <div align="center" style="width:100%;">
+            <p style="display: none;font-size: x-large;background-color: #F2EFDF;width: auto;" id="slider_page_id"></p>
+        </div>
+
+        {# 底部滚动条 #}
+        <input id="ranger" style="width: 100%;" type="range" name="range" min="1" max="{{ books|length }}" step="1" value="1" onchange="sliderMouseUp()" oninput="sliderChange()" />
+    </div>
+
+
+    {# 图片 #}
+
+    <div id="contant" class="swiper-container" >
+        <div class="swiper-wrapper" id="content_image_div" >
+
+
+        </div>
+    </div>
+    {# 底部回到首页和页数 #}
+    <a href="/"> 首页 </a>
+        Page:<span id="page_index">1</span> -  All {{ books|length }} pages<a href="/"> 首页 </a>
+
+    </div>
+
+    <div id="search_eh" style="display: none;width: 100%;height: 100%;">
+        <iframe id="search_res_iframe" style="width: 100%;height: 100%;"></iframe>
+
+    </div>
+
+
+</body>
+    <script>
+        document.getElementById("search_in_eh_button").onclick = function ( event ) {
+            var event = event || window.event;
+
+            console.log("Search in eh");
+            var iframe_div = document.getElementById("search_eh");
+            document.getElementById("contant").style.display = "none";
+            var ifrme = document.getElementById("search_res_iframe");
+            var keyword = document.getElementById("search_eh_input").value;
+
+            var url = "/searcheh"+"?keyword="+keyword+"&bookid={{ gallery_id }}"
+
+
+            iframe_div.style.display = 'block';
+            ifrme.src = url;
+
+            event.preventDefault();
+            location.href = "#search_res_iframe";
+
+
+        };
+
+
+    </script>
+</html>

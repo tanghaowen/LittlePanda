@@ -1,0 +1,120 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>ManagePages</title>
+    <script src="/static/postRequest.js"></script>
+    <script src="/static/getRequest.js"></script>
+    <script>
+        function scanTmpFolder() {
+            document.getElementById("addingdiv").innerHTML = "";
+            var archpath = document.getElementById("arch_path").value;
+            console.log( archpath)
+            postJson("/manage", {"type": "scanTmpFolder", "data": archpath});
+        }
+
+        function downloadEhProgress( status ) {
+            var dowloadDiv = document.getElementById("downdiv");
+
+
+            var statuss = eval(status);
+
+
+            for (var index in statuss) {
+                if (index > dowloadDiv.childNodes.length-1) {
+                var sub_div = document.createElement("div");
+                sub_div.innerHTML = statuss[index][0] +"  "+ statuss[index][1];
+
+                dowloadDiv.appendChild(sub_div);
+                }else {
+                    dowloadDiv.childNodes[index].innerHTML = statuss[index][0] +"  "+ statuss[index][1];
+                }
+
+
+
+
+            }
+
+            console.log( status )
+
+        }
+        function addingProgress( status ) {
+            var statuss = JSON.parse(status);
+            var dowloadDiv = document.getElementById("addingdiv");
+
+
+
+
+            for (var index in statuss["files"][0]) {
+                if (index > dowloadDiv.childNodes.length-1) {
+                var sub_div = document.createElement("div");
+                sub_div.innerHTML = statuss["files"][2][index] +"  "+  statuss["files"][0][index] ;
+                    if ( statuss["files"][2][index].indexOf("Adding") > 0 ||
+                        statuss["files"][2][index].indexOf("exact") > 0){
+                        sub_div.style.backgroundColor = "#0000FF";
+                    }
+                dowloadDiv.appendChild(sub_div);
+                }else {
+                    dowloadDiv.childNodes[index].innerHTML = statuss["files"][2][index] +"  "+  statuss["files"][0][index] ;
+                    if ( statuss["files"][2][index].indexOf("Adding") > 0 ||
+                        statuss["files"][2][index].indexOf("exact") > 0){
+                        dowloadDiv.childNodes[index].style.backgroundColor = "#0000FF";
+                    }
+                }
+
+
+
+
+            }
+
+
+        }
+
+
+
+    </script>
+
+</head>
+<body>
+    <div>
+        <input type="text" value="{{ archpath }}" id="arch_path"/>
+        Scan Files In tmp Folder <button type="button" onclick="scanTmpFolder()">Scan</button>
+        
+    </div>
+    <div style="background: gray;">
+        Adding Task:
+    </div>
+    <div id="addingdiv" style="background: gray;"></div>
+        <p></p>
+    <div style="background: pink;" >
+        Download From Ehentai:
+    </div>
+    <div id="downdiv" style="background: pink;"></div>
+
+    <div>
+        <div>Deleted Books</div>
+        {% for cover_thumb_page in removed_books %}
+            <div>
+            {{ cover_thumb_page['title'] }}
+            </div>
+        {% endfor %}
+
+
+    </div>
+
+
+
+    <script>
+        setInterval(
+            function(){
+                getJsonWithFunctionParaIsResponseContent("/task?type=downloadeh", downloadEhProgress);
+
+                }, 1000);
+           setInterval(
+            function(){
+                getJsonWithFunctionParaIsResponseContent("/task?type=addingtosys", addingProgress);
+
+                }, 1000);
+    </script>
+</body>
+</html>

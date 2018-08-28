@@ -1,0 +1,35 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>Title</title>
+</head>
+<body>
+    <script>
+
+        
+
+
+        var download_a_tag = document.createElement("a");
+
+download_a_tag.addEventListener("click", function (event) {
+    var postData = {"exurl": window.location.href};
+    var data = JSON.stringify(postData);
+    console.log("Download");
+    GM_xmlhttpRequest({
+        "method": "POST",
+        "url":"http://127.0.0.1:5000/downfromEx",
+        "data":data
+
+    });
+
+
+});
+download_a_tag.innerHTML = "Download This Gallery";
+download_a_tag["href"] = "javascript:void(0);";
+document.getElementById("gd5").appendChild(download_a_tag);
+
+
+    </script>
+</body>
+</html>

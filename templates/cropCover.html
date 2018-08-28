@@ -1,0 +1,129 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width,minimum-scale=1.0,maximum-scale=1.0,user-scalable=no" />
+    <title>Little Panda</title>
+    <script src="../static/postRequest.js"></script>
+    <script>
+
+        var startX = startY = endX = endY = 0;
+        var isNowStartPoint = true;
+        var firstTime = true;
+
+        function drawStartPointInCanvas( x,y) {
+            c = document.getElementById("myCanvas");
+            ctx = c.getContext('2d');
+            ctx.fillStyle = "rgba(0,255,0,0.5)";
+            ctx.beginPath()
+            ctx.arc(x, y, 20, 0, (Math.PI / 180) * 360);
+             ctx.fill();
+        }
+
+        function drawRectInCanvas( x,y,endx,endy) {
+            c = document.getElementById("myCanvas");
+            ctx = c.getContext('2d');
+            var wid = Math.abs(endx - x);
+            var hei = Math.abs(endy-y);
+
+            ctx.fillStyle = ctx.fillStyle = "rgba(255,0,0,0.2)";
+            ctx.fillRect(x, y, wid, hei);
+        }
+
+    </script>
+</head>
+
+<body>
+    <canvas id="myCanvas" width="100%" height="100%"  ></canvas>
+
+
+    <script type="text/javascript">
+        var c = document.getElementById("myCanvas");
+                function onMouseDown(obj){
+            if ( isNowStartPoint){
+                if (firstTime){
+                    firstTime = !firstTime;
+                }else{
+                    if ( ! confirm("Use this rect to new cover?")){
+
+                    resizeCanvas();
+                    firstTime = true;
+                    }else{
+
+
+
+                        postJson("/cropGalleryCover", {
+                            'book_id':{{book_id}},
+                            'page':{{ page }},
+                            'rect': [startX/scale_number, startY/scale_number, endX/scale_number, endY/scale_number]});
+
+                    }
+                return;
+
+                }
+                startX = obj.pageX - document.getElementById("myCanvas").offsetLeft;
+                startY = obj.pageY - document.getElementById("myCanvas").offsetTop;
+                console.log(startX, startY);
+                isNowStartPoint = !isNowStartPoint;
+                drawStartPointInCanvas(startX, startY);
+            }else{
+                endX = obj.pageX - document.getElementById("myCanvas").offsetLeft;
+                endY = obj.pageY - document.getElementById("myCanvas").offsetTop;
+                console.log("end")
+                console.log(endX, endY);
+                 isNowStartPoint = !isNowStartPoint;
+                drawStartPointInCanvas(endX,endY)
+                drawRectInCanvas(startX, startY, endX, endY);
+
+
+
+            }
+
+        }
+
+        c.onmousedown=onMouseDown;
+
+        var cxt = c.getContext("2d");
+        var img_tag = new Image();
+        window.onresize = resizeCanvas;
+        var scale_number = 0;
+        function drawImageToCanvas(image_tag) {
+            var canvas_width = c.width;
+            var canvas_height = c.height;
+
+            var img_width = image_tag.width;
+            var img_height = image_tag.height;
+
+            var draw_width = 0;
+            var draw_height = 0;
+
+            scale_number = canvas_width / img_width;
+
+            if (scale_number * img_height > canvas_height) {
+                scale_number = canvas_height / img_height;
+            }
+
+            var draw_width = scale_number * img_width;
+            var draw_height = scale_number * img_height
+
+            cxt.drawImage(image_tag, 0, 0, draw_width, draw_height);
+
+        }
+
+
+        function resizeCanvas() {
+            c.width = document.documentElement.clientWidth;
+            c.height = document.documentElement.clientHeight;
+            drawImageToCanvas(img_tag);
+        }
+        resizeCanvas();
+
+        img_tag.onload = function() {
+            drawImageToCanvas(img_tag);
+        }
+        img_tag.src = "/img/"+"{{ pageInfo['hash'] }}";
+    </script>
+</body>
+
+</html>

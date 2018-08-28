@@ -1,0 +1,211 @@
+<!DOCTYPE html>
+<html lang="en" style="height: 100%;">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width,minimum-scale=1.0,maximum-scale=1.0,user-scalable=no" />
+    <title>{{ title }}</title>
+    <style>
+        div.gt {
+            float: left;
+            font-weight: bold;
+            padding: 1px 4px;
+            margin: 0 2px 5px 2px;
+            white-space: nowrap;
+            position: relative;
+            border-radius: 5px;
+            border: 1px solid #806769;
+            background: #F2EFDF
+        }
+        div.gt2 {
+
+            font-weight: bold;
+            padding: 1px 4px;
+            margin: 0 2px 5px 2px;
+            white-space: nowrap;
+            position: relative;
+            border-radius: 5px;
+            border: 1px solid #806769;
+            background: #F2EFDF
+        }
+    </style>
+
+    <script type="text/javascript" charset="utf-8">
+        window.addEventListener("load", function(event) {
+        initPage();
+        });
+
+        function sliderMouseUp() {
+
+            var ranger = document.getElementById('ranger');
+            var ranger_text = document.getElementById('slider_page_id');
+            var page = ranger.value;
+            ranger_text.style.display = 'block';
+
+            gotoPage(page);
+
+            ranger_text.style.display = 'none';
+
+        }
+
+        function gotoPage(page) {
+            div_tag = document.getElementById("content_image_div");
+            var next_page = page;
+
+            while (div_tag.firstChild) div_tag.removeChild(div_tag.firstChild);
+            var next_page_image_url = "/img/" + content_images[next_page-1];
+            console.log("go to page image url: " + next_page_image_url);
+            img_tags[next_page-1].src = next_page_image_url ;
+            div_tag.appendChild(img_tags[next_page-1]);
+
+            document.getElementById("page_index").innerText = next_page.toString();
+
+            img_tags[next_page-1+1].src = "/img/" + content_images[next_page-1+1];
+            img_tags[next_page-1+2].src = "/img/" + content_images[next_page-1+2];
+            img_tags[next_page-1+3].src = "/img/" + content_images[next_page-1+3];
+
+        }
+
+        function gotoNextpage() {
+
+
+            div_tag = document.getElementById("content_image_div");
+            var img_tag = div_tag.getElementsByTagName("img")[0];
+            var page = img_tag.getAttribute("page");
+            console.log("now page:" + page);
+            page = parseInt( page );
+            if ( page >= content_images.length ) {
+                console.log("Arrive the last page,stop");
+                return;
+            }
+
+            var next_page = ++page;
+            console.log("next page:" + next_page.toString());
+
+
+            while (div_tag.firstChild) div_tag.removeChild(div_tag.firstChild);
+
+            var next_page_image_url = "/img/" + content_images[next_page-1];
+            console.log("next page image url: " + next_page_image_url);
+            img_tags[next_page-1].src = next_page_image_url ;
+            div_tag.appendChild(img_tags[next_page-1]);
+            document.getElementById("ranger").value = next_page;
+            location.href = "#content_image_div";
+            document.getElementById("page_index").innerText = next_page.toString();
+
+            img_tags[next_page-1+1].src = "/img/" + content_images[next_page-1+1];
+            img_tags[next_page-1+2].src = "/img/" + content_images[next_page-1+2];
+            img_tags[next_page-1+3].src = "/img/" + content_images[next_page-1+3];
+
+
+
+        }
+        function sliderChange() {
+            var ranger = document.getElementById('ranger');
+            var ranger_text = document.getElementById('slider_page_id');
+            var page = ranger.value;
+            ranger_text.style.display = 'block';
+            ranger_text.innerHTML = page;
+        }
+
+
+        function initPage() {
+            var page = 1;
+            console.log("start to init img tags!");
+            console.log("length of content_images:"+content_images.length);
+            for ( var i = 0;i<content_images.length;i++){
+
+                var img_tag = new Image();
+                img_tags.push(img_tag);
+                img_tag.style["max-width"] = "100%";
+
+                img_tag.addEventListener("click", gotoNextpage);
+                img_tag.setAttribute("page", page.toString());
+                page++;
+            }
+            console.log("tags:"+img_tags.length);
+
+            var content_div = document.getElementById("content_image_div");
+            if ( content_images.length > 3) {
+                img_tags[0].src = "/img/" + content_images[0];
+                img_tags[1].src = "/img/" + content_images[1];
+                img_tags[2].src = "/img/" + content_images[2];
+            }else if ( content_images.length == 1) {
+                img_tags[0].src = "/img/" + content_images[0];
+            }
+
+            content_div.appendChild(img_tags[0]);
+        }
+        var content_images = {{ content_images| safe }};
+        var img_tags = new Array();
+
+
+
+
+    </script>
+</head>
+
+<body style="height:100%;">
+    <form style="display: none;" action="/delete" method="post" id="delete_gallery">
+        <input type="text" name="type" value="gallery" /><br />
+        <input type="text" name="target" value="{{ books[0]['book_id'] }}" />
+        <input  type="text" name="page" value="{{ gallery_id }}" >
+        <br />
+    </form>
+    <p> {{ title }}</p>
+    <div>
+    <button type="submit" form="delete_gallery" value="Submit">Delete Gallery</button>
+    <span>  Book size: {{ book_size }} mb</span></div>
+    <div>
+
+        <form  action="/searcheh" method="get" id="searchInEh">
+        <input type="text" name="keyword" value="{{ search_title }}" style="width: 80%" />
+            <input type="text" name="bookid" value="{{ gallery_id }}" style="display: none;" />
+        <button type="submit" form="searchInEh" value="Submit"> Search In Eh </button>
+    </form>
+    </div>
+    <div class="gt2">
+        <table>
+            <tbody>
+                {% for catalog,tags in tagGroup.items() %}
+                <tr>
+                    <td> {{ catalog }}</td>
+                    <td>
+                        {% for tag in tags %}
+                        <div class="gt">
+                            <a href="/search?tag={{ tag }}"> {{ tag }}</a>
+                        </div>
+                        {% endfor %}
+                    </td>
+                </tr>
+                {% endfor %}
+            </tbody>
+        </table>
+    </div>
+
+ {# 图片部分 #}
+    <div style="width: 100%;position: fixed; bottom: 0px;left: 0px;">
+        <div align="center" style="width:100%;">
+            <p style="display: none;font-size: x-large;background-color: #F2EFDF;width: auto;" id="slider_page_id"></p>
+        </div>
+
+        {# Slide #}
+        <input id="ranger" style="width: 100%;" type="range" name="range" min="1" max="{{ books|length }}" step="1" value="1" onchange="sliderMouseUp()" oninput="sliderChange()" />
+    </div>
+
+
+
+    <div id="content_image_div" style="width: 100%">
+
+
+    </div>
+    <a href="/"> 首页 </a>
+        Page:<span id="page_index">1</span> -  All {{ books|length }} pages<a href="/"> 首页 </a>
+
+
+
+
+
+</body>
+
+</html>

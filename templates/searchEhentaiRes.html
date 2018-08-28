@@ -1,0 +1,61 @@
+<!DOCTYPE html>
+<html lang="en" style="height: 100%;">
+<head>
+    <meta charset="UTF-8">
+    <title>Search In Ehentai Resault</title>
+    <style>
+    .thumb span {
+	position:absolute;
+	visibility:hidden;
+}
+    .thumb {
+
+	position:relative;
+	margin:3px;
+}
+    .thumb:hover {
+	border:0; /* IE6 needs this to show large image */
+	z-index:1;
+}
+    .thumb:hover span {
+        visibility:visible;
+        top:37px; left:37px;
+}
+</style>
+    <script>
+        function bookClicked( index ) {
+
+            var input = document.getElementById("input_book");
+            var a = document.getElementById(index.toString());
+            var url_a = a.getAttribute("src");
+            input.value = url_a;
+
+            postJsonWithFunctionParaIsResponseContent("searcheh", {"url": url_a, "book_id":{{book_id}},"type":"get_book_info"}, postEnd);
+
+
+        }
+
+        function postEnd( content ) {
+
+        }
+    </script>
+    <script src="/static/postRequest.js"></script>
+</head>
+<body style="height: 100%;">
+        <form style="display: none;"  method="post" id="select_book" name="select_book" target="myFrame">
+            <input id="input_book" type="text" name="url" value="" />
+            <input id="input_book" type="text" name="book_id" value="{{ book_id }}" /><br />
+            <br />
+        </form>
+{%  set i = 0 %}
+{% for li in res_list  %}
+    <div  class="thumb">
+        <a href="javascript:bookClicked({{ loop.index0 }})"><span><img src="{{ li['img_url'] }}"/></span></a>
+        <a id="{{ loop.index0 }}"  src="{{ li['url'] }}" href="javascript:bookClicked({{ loop.index0 }})"> {{ li['title'] }}</a>
+    </div>
+
+{% endfor %}
+
+
+</body>
+</html>
