@@ -19,8 +19,7 @@ from SiteTools import img
 import json
 import copy
 from flask import abort
-from watchdog.observers import Observer
-from watchdog.events import LoggingEventHandler
+
 from ctypes import *
 
 app = Flask(__name__)
@@ -376,6 +375,7 @@ def homepage():
     if gid_mode == 1:
         items = 40
         if mode == "findnoehpath":
+            # I really crated this so long function name before one year??????????????
             home_page_books.getBooksCoverThumbInfoNotHaveCatalogInfoFromDatabaseOrderByCreateTimeWithPage(page,items)
             return render_template("homepage_gid_findnoehpath.html", books=home_page_books.bookAllInfo, nowPage=page)
 
@@ -479,11 +479,11 @@ if __name__ == '__main__':
     observer = Observer()
     observer.schedule(event_handler, uploadedArchPath, recursive=True)
     observer.start()"""
-    LPFS_LIB_PATH = c_wchar_p("F:/LPFS_LIB")
-    image_lib_path = c_wchar_p("E:\\Project\\flaskSite\\img")
-    exact_path = c_wchar_p("F:\\LPFS_LIB\\cache")
-    tmp_path = c_wchar_p("E:\\Project\\flaskSite")
-    lpfs_dll = windll.LoadLibrary("E:\\Project\\LittlePandaFS\\LittlePandaFileSystem\\x64\\Debug\\LPFS_DLL.dll")
+    LPFS_LIB_PATH = c_wchar_p(r"E:\LPFS_LIB")
+    image_lib_path = c_wchar_p(r"E:\Project\LittlePanda\img")
+    exact_path = c_wchar_p(r"E:\LPFS_LIB\cache")
+    tmp_path = c_wchar_p(r"E:\Project\LittlePanda\tmp")
+    lpfs_dll = cdll.LoadLibrary(r"E:\Project\LittlePandaFileSystem\x64\Release\LPFS_DLL.dll")
     lpfs_dll.init(LPFS_LIB_PATH, image_lib_path, exact_path,tmp_path, 1024)
 
 

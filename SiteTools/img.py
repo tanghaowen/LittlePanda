@@ -280,8 +280,15 @@ def addNewArchFileToImgLibWithProgress( archFilename , sqlManager ,title,uploade
 
 
 
-    attr = (c_int * len(images_ids_to_added_to_LPFS))(*images_ids_to_added_to_LPFS)
+    seq = c_int32 * len(images_ids_to_added_to_LPFS)
+    attr = seq(*images_ids_to_added_to_LPFS)
+
+
+
     lenth_of_attr = c_int( len( images_ids_to_added_to_LPFS) )
+
+    print(byref(attr))
+    print(lenth_of_attr)
     lpfs_dll.addImagesToLPFSByImageIds(attr, lenth_of_attr)
 
 

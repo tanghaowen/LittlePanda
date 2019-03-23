@@ -103,6 +103,8 @@ class bookInfo():
 
         self.bookAllInfo = results
         return True
+
+    # I really crated this so long function name before one year?????
     def getBooksCoverThumbInfoNotHaveCatalogInfoFromDatabaseOrderByCreateTimeWithPage(self , page = 1 , items = 10):
 
         self.sqlManager.cursor.execute("""

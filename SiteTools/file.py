@@ -2,9 +2,7 @@ import hashlib
 import os
 import re
 from SiteTools import img
-from watchdog.observers import Observer
-from watchdog.events import LoggingEventHandler
-from watchdog.events import RegexMatchingEventHandler
+
 from ctypes import *
 
 def calFileMd5(file_name):
@@ -151,28 +149,3 @@ def importArchFileFromTmp(sqlManager,uploadedArchPathRoot,tmpPath="tmp/", status
 
         status["doneFiles"] += 1
 
-class MyHandler(RegexMatchingEventHandler):
-
-    def __init__(self, regex_list=[r".*"]):
-        super(MyHandler, self).__init__(regex_list)
-
-    def on_created(self, event):
-        if event.is_directory:
-            pass
-        else:
-            print(event.event_type, event.src_path)
-
-    def on_deleted(self, event):
-        if event.is_directory:
-            pass
-        else:
-            print(event.event_type, event.src_path)
-
-    def on_modified(self, event):
-        if event.is_directory:
-            pass
-        else:
-            print(event.event_type, event.src_path)
-
-    def on_moved(self, event):
-        print("move", event.src_path, event.dest_path)

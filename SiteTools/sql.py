@@ -7,10 +7,12 @@ import time
 import re
 from ctypes import *
 from SiteTools import file
+
 class sqlDataManager():
 
     def __init__(self):
-        self.sqldb = MySQLdb.connect(user="root",passwd = "shinonomehana" ,charset = "UTF8")
+
+        self.sqldb = MySQLdb.connect(host = 'localhost', user="littlepanda",passwd = "shinonomehana" ,charset = "UTF8")
         self.cursor = self.sqldb.cursor(cursorclass = MySQLdb.cursors.DictCursor)
         self.cursor.execute("""
         CREATE DATABASE IF NOT EXISTS littlepanda;
