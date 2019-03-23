@@ -44,7 +44,7 @@ A local gallery view and manage system written by flask.
     # the little panda system dll file path
     lpfs_dll = cdll.LoadLibrary(r"E:\Project\LittlePandaFileSystem\x64\Release\LPFS_DLL.dll")
     ```
-2. littlepandafilesystemのdllファイルを、[LittlePandaFS repo](https://github.com/tanghaowen/LittlePandaFileSystem) からダウンロードしてください。
+2. littlepandafilesystemのdllファイルは、[LittlePandaFS repo](https://github.com/tanghaowen/LittlePandaFileSystem) のコードからcompileしてください
 
 3. 最後に
     ```bash
